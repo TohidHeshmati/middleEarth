@@ -1,5 +1,6 @@
 package com.tohid
 
+import com.tohid.client.QueryParameters
 import com.tohid.client.TheOneApiClient
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,7 @@ suspend fun main() {
         // showContextSwitching(api)
         // showErrorHandling(api)
         //showCancellation(api)
+        showFanOutFanIn(api)
     }
 }
 
@@ -111,4 +113,25 @@ suspend fun showBoundedConcurrency(api: TheOneApiClient) = coroutineScope {
 
 fun calculateFibonacci(n: Int): Long {
     return if (n <= 1) n.toLong() else calculateFibonacci(n - 1) + calculateFibonacci(n - 2)
+}
+
+suspend fun showFanOutFanIn(api: TheOneApiClient) = coroutineScope {
+    println("\n--- Pattern 6: Fan-out / Fan-in (Aggregating movie Quotes) ---")
+
+    val response = api.getMovies(QueryParameters(limit = 10))
+    val movies = response.docs.take(2)
+
+    println("Fanning out to fetch quotes for: ${movies.joinToString { it.name }}")
+
+    val deferredQuotes = movies.map { movie ->
+        async {
+            api.getMovieQuotes(movie.id, QueryParameters(limit = 5))
+        }
+    }
+
+    val allQuotes = deferredQuotes.awaitAll().flatMap { it.docs }
+
+    println("Fan-in complete: Flattened ${allQuotes.size} total quotes from ${movies.size} workers.")
+
+    allQuotes.forEach { quote -> println(" > ${quote.dialog}") }
 }

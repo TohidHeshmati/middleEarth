@@ -111,7 +111,6 @@ class TheOneApiClient(private val token: String) : AutoCloseable {
             getMovieQuotes(movieId)
         }
 
-        // If 'movie' fails, 'quotes' is automatically cancelled by the parent coroutineScope
         val dashboard = Dashboard("MIDDLE-EARTH MOVIE INSIGHTS")
         dashboard.addComponent("Movie", listOf(movie.await(), quotes.await()))
         dashboard.render()
