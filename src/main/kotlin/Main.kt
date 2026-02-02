@@ -16,7 +16,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-const val THE_ONE_API_TOKEN = "B3pFu8wPkJy8NvHRtKMK"
+const val THE_ONE_API_TOKEN = "aaa"
 const val THE_ONE_API_BASE_URL = "https://the-one-api.dev/v2/"
 
 suspend fun main() {
