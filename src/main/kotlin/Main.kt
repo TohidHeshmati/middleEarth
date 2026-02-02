@@ -56,7 +56,7 @@ suspend fun showContextSwitching(api: TheOneApiClient) {
 
         withContext(Dispatchers.Default) {
             println("Heavy CPU Processing on: ${Thread.currentThread().name}")
-            // Imagine sorting 10,000 quotes here
+            calculateFibonacci(12)
         }
     }
 }
@@ -94,7 +94,7 @@ suspend fun showCancellation(api: TheOneApiClient) = coroutineScope {
 }
 
 suspend fun showBoundedConcurrency(api: TheOneApiClient) = coroutineScope {
-    val semaphore = Semaphore(permits = 3) // Max 3 concurrent requests
+    val semaphore = Semaphore(permits = 3)
     val results = mutableListOf<Deferred<Unit>>()
 
     repeat(10) { i ->
